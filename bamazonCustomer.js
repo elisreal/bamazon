@@ -12,7 +12,7 @@ var connection = mysql.createConnection({
     database: "bamazonDB"
 });
 
-
+// First connect to the database and display the products--------------------
 var bamCustomer = function() {
   connection.query('SELECT * FROM products', function(err, res) {
 
@@ -36,7 +36,7 @@ var bamCustomer = function() {
     }
     console.log(table.toString());
     
-// Use inquirer to ask which item you want to buy and quantity of that item
+// Use inquirer to ask which item you want to buy and quantity---------------
     inquirer.prompt([{  
       name: "itemId",
       type: "input",
@@ -63,10 +63,14 @@ var bamCustomer = function() {
           }
         }
     ]).then(function(answer) {
+
+      // Collect the answers from Inquirer----------------------------------- 
         var chosenId = answer.itemId - 1;
         var chosenProduct = res[chosenId];
         var chosenQuantity = answer.Quantity;
         if(chosenQuantity < chosenProduct.StockQuantity) {
+
+          // Displays the product chosen and the final price-----------------
           console.log("Your total for " + "(" + answer.Quantity + ")" + "-" + chosenProduct.ProductName + " is: " + chosenProduct.Price.toFixed(2) * chosenQuantity);
           connection.query("UPDATE products SET ? WHERE ?", [{
               StockQuantity: chosenProduct.StockQuantity - chosenQuantity
